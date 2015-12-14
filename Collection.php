@@ -103,8 +103,11 @@ class Collection extends Component
      * @return IPushService push service instance.
      * @throws InvalidParamException on non existing service request.
      */
-    public function getService($id)
+    public function getService($id = null)
     {
+        if($id === null){
+            return $this->getDefaultService();
+        }
         if (!array_key_exists($id, $this->_services)) {
             throw new InvalidParamException("Unknown push service '{$id}'.");
         }
