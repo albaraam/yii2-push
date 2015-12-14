@@ -1,0 +1,25 @@
+{
+    "name": "albaraam/yii2-push",
+    "description": "Push notification services manager for the Yii framework",
+    "keywords": ["yii2", "push", "notification", "gcm","apns", "amazon"],
+    "minimum-stability": "dev",
+    "type": "yii2-extension",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/albaraam/yii2-push/issues",
+        "source": "https://github.com/albaraam/yii2-push"
+    },
+    "authors": [
+        {
+            "name": "Albaraa Mishlawi",
+            "email": "albaraa_m@live.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": ">=2.0.4",
+        "albaraam/yii2-gcm-apns": "~1.0.0"
+    },
+    "autoload": {
+        "psr-4": { "albaraam\\push\\": "" }
+    }
+}
