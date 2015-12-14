@@ -41,7 +41,8 @@ Add & configure the GCM-Apns component in your config file: (required for the ba
 ```
 
 Then add & configure the Collection component in your config file:
--`Collection is a storage for all push services in the application.`
+
+- `Collection is a storage for all push services in the application.`
 
 ```
 'components' => [
