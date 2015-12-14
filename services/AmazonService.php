@@ -155,11 +155,12 @@ class AmazonService extends BaseService implements IPushService
      */
     public function sendToChannel($service_channel_id, $pushMessage)
     {
+        $message = $this->messageToArray($pushMessage);
         $result = $this->getClient()->publish(array(
             'TopicArn' => $service_channel_id,
             'Message' => json_encode([
-                "GCM" => json_encode($pushMessage->getAndroidMessage()->toArray(),true),
-                "APNS" => json_encode($pushMessage->getIosMessage()->toArray(),true),
+                "GCM" => json_encode($message['android'],true),
+                "APNS" => json_encode($message['ios'],true),
                 "default" => ""
             ],true),
             'Subject' => 'string',
@@ -171,7 +172,7 @@ class AmazonService extends BaseService implements IPushService
      * Returns a S3Client instance
      * @return \Aws\Sns\SnsClient
      */
-    public function getClient()
+    private function getClient()
     {
         if ($this->_client === null) {
             $this->_client = SnsClient::factory([
@@ -181,4 +182,131 @@ class AmazonService extends BaseService implements IPushService
         }
         return $this->_client;
     }
+
+    private function messageToArray(Message $pushMessage){
+        $a = ['android'=>[],'ios'=>[]];
+
+        /************************************ Android Message *************************************/
+
+        /*
+         * Options
+         * */
+        if($pushMessage->android->getCollapseKey()){
+            $a['android']["collapse_key"] = $pushMessage->android->collapse_key;
+        }
+        if($pushMessage->android->getPriority()){
+            $a['android']["priority"] = $pushMessage->android->getPriority();
+        }
+        if($pushMessage->android->isContentAvailable()){
+            $a['android']["content_available"] = $pushMessage->android->isContentAvailable();
+        }
+        if($pushMessage->android->getDelayWhileIdle()){
+            $a['android']["delay_while_idle"] = $pushMessage->android->getDelayWhileIdle();
+        }
+        if($pushMessage->android->getTimeToLive()){
+            $a['android']["time_to_live"] = $pushMessage->android->getTimeToLive();
+        }
+        if($pushMessage->android->getRestrictedPackageName()){
+            $a['android']["restricted_package_name"] = $pushMessage->android->getRestrictedPackageName();
+        }
+        if($pushMessage->android->isDryRun()){
+            $a['android']["dry_run"] = $pushMessage->android->isDryRun();
+        }
+
+        /*
+         * Payload Notification
+         * */
+
+        $a['android']["notification"]["title"] =
+            ($pushMessage->android->getTitle()) ? $pushMessage->android->getTitle() : "Notification Title";
+
+        if($pushMessage->android->getBody()){
+            $a['android']["notification"]["body"] = $pushMessage->android->getBody();
+        }
+
+        $a['android']["notification"]["icon"] =
+            ($pushMessage->android->getIcon()) ? $pushMessage->android->getIcon() : "default";
+
+        if($pushMessage->android->getSound()){
+            $a['android']["notification"]["sound"] = $pushMessage->android->getSound();
+        }
+        if($pushMessage->android->getTag()){
+            $a['android']["notification"]["tag"] = $pushMessage->android->getTag();
+        }
+        if($pushMessage->android->getColor()){
+            $a['android']["notification"]["color"] = $pushMessage->android->getColor();
+        }
+        if($pushMessage->android->getClickAction()){
+            $a['android']["notification"]["click_action"] = $pushMessage->android->getClickAction();
+        }
+        if($pushMessage->android->getBodyLocKey()){
+            $a['android']["notification"]["body_loc_key"] = $pushMessage->android->getBodyLocKey();
+        }
+        if($pushMessage->android->getBodyLocArgs()){
+            $a['android']["notification"]["body_loc_args"] = $pushMessage->android->getBodyLocArgs();
+        }
+        if($pushMessage->android->getTitleLocKey()){
+            $a['android']["notification"]["title_loc_key"] = $pushMessage->android->getTitleLocKey();
+        }
+        if($pushMessage->android->getTitleLocArgs()){
+            $a['android']["notification"]["title_loc_args"] = $pushMessage->android->getTitleLocArgs();
+        }
+
+        /*
+         * Payload data
+         * */
+        if($pushMessage->android->getData()){
+            $a['android']["data"] = $pushMessage->android->getData();
+        }
+
+        /************************************ IOS Message *************************************/
+
+        /*
+         * Alert
+         * */
+        if($pushMessage->ios->getTitle()){
+            $a['ios']['aps']['alert']['title'] = $pushMessage->ios->getTitle();
+        }
+        if($pushMessage->ios->getBody()){
+            $a['ios']['aps']['alert']['body'] = $pushMessage->ios->getBody();
+        }
+        if($pushMessage->ios->getBodyLocKey()){
+            $a['ios']['aps']['alert']['loc_key'] = $pushMessage->ios->getBodyLocKey();
+        }
+        if($pushMessage->ios->getBodyLocArgs()){
+            $a['ios']['aps']['alert']['loc_args'] = $pushMessage->ios->getBodyLocArgs();
+        }
+        if($pushMessage->ios->getTitleLocKey()){
+            $a['ios']['aps']['alert']['title_loc_key'] = $pushMessage->ios->getTitleLocKey();
+        }
+        if($pushMessage->ios->getTitleLocArgs()){
+            $a['ios']['aps']['alert']['title_loc_args'] = $pushMessage->ios->getTitleLocArgs();
+        }
+        if($pushMessage->ios->getLaunchImage()){
+            $a['ios']['aps']['alert']['launch_image'] = $pushMessage->ios->getLaunchImage();
+        }
+
+        /*
+         * Options
+         * */
+        if($pushMessage->ios->getSound()){
+            $a['ios']['aps']["sound"] = $pushMessage->ios->getSound();
+        }
+        if($pushMessage->ios->getBadge()){
+            $a['ios']['aps']["badge"] = $pushMessage->ios->getBadge();
+        }
+        if($pushMessage->ios->isContentAvailable()){
+            $a['ios']['aps']["content_available"] = $pushMessage->ios->isContentAvailable();
+        }
+        if($pushMessage->ios->getCategory()){
+            $a['ios']['aps']["category"] = $pushMessage->ios->getCategory();
+        }
+
+        foreach ($pushMessage->ios->getData() as $key => $value) {
+            $a['ios'][$key] = $value;
+        }
+
+        return $a;
+    }
+
 }
