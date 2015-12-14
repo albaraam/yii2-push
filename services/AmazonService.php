@@ -6,13 +6,9 @@ use albaraam\gcmapns\Message;
 use albaraam\push\IPushService;
 use Aws\Sns\SnsClient;
 use yii\base\InvalidConfigException;
-use yii\bootstrap\Html;
 
 /**
- * Created by PhpStorm.
- * User: User
- * Date: 11/27/2015
- * Time: 1:03 PM
+ * Author: Albaraa Mishlawi (albaraa_m@live.com)
  */
 class AmazonService extends BaseService implements IPushService
 {
@@ -177,7 +173,8 @@ class AmazonService extends BaseService implements IPushService
         if ($this->_client === null) {
             $this->_client = SnsClient::factory([
                 'key' => $this->key,
-                'secret' => $this->secret
+                'secret' => $this->secret,
+                'region' => $this->region
             ]);
         }
         return $this->_client;
