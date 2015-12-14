@@ -17,7 +17,8 @@
     ],
     "require": {
         "yiisoft/yii2": ">=2.0.4",
-        "albaraam/yii2-gcm-apns": "~1.0.0"
+        "albaraam/yii2-gcm-apns": "~1.0.0",
+        "aws/aws-sdk-php": "2.8.2"
     },
     "autoload": {
         "psr-4": { "albaraam\\push\\": "" }
