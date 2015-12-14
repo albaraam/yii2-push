@@ -15,7 +15,7 @@ Either run
 
 ```
 composer require --prefer-dist albaraam/yii2-push "~1.0.0"
-
+```
 or add
 
 ```json
