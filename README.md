@@ -29,7 +29,7 @@ Setup
 
 Add & configure the GCM-Apns component in your config file: (required for the basic service)
 
-```
+```php
 'components' => [
     'gcmApns' => [
         'class' => 'albaraam\yii2_gcm_apns\GcmApns',
@@ -44,7 +44,7 @@ Then add & configure the Collection component in your config file:
 
 - `Collection is a storage for all push services in the application.`
 
-```
+```php
 'components' => [
      ...
      'pushServiceCollection' => [
@@ -81,7 +81,7 @@ Usage
 
 Now after the setup, let's see how use it.
   
-```
+```php
 // get the default service
 $service = Yii::$app->pushServiceCollection->getService();
 
